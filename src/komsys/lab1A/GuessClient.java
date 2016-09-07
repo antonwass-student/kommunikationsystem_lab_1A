@@ -31,52 +31,15 @@ public class GuessClient {
     private void play(){
         boolean playing = true;
 
-
-        send(CommunicationProtocol.Hello());
-        System.out.println("Poking server...");
+        System.out.println("Hello! Write HELLO");
 
         while(playing){
 
             String message = receive(5000);
+            System.out.println(message);
+            String msg = scanner.nextLine();
+            send(msg);
 
-            switch(message){
-                case "READY":
-                    System.out.println("Server is ready. Guess a number!");
-                    //scanner.next();
-                    send(CommunicationProtocol.Guess(readIntSafe()));
-                    break;
-                case "OK":
-                    System.out.println("Server is available.");
-                    send(CommunicationProtocol.Start());
-                    break;
-                case "HI":
-                    System.out.println("Higher");
-                    System.out.println("Guess:");
-                    //scanner.next();
-                    send(CommunicationProtocol.Guess(readIntSafe()));
-                    break;
-                case "LO":
-                    System.out.println("Lower");
-                    System.out.println("Guess:");
-                    //scanner.next();
-                    send(CommunicationProtocol.Guess(readIntSafe()));
-                    break;
-                case "CORRECT":
-                    System.out.println("Correct!");
-                    playing = false;
-                    break;
-                case "BUSY":
-                    System.out.println("Server is busy!");
-                    playing = false;
-                    break;
-                case "STO":
-                    System.out.println("Request timed out. Exiting program.");
-                    playing = false;
-                    break;
-                default:
-                    System.out.println("Could not interpret message...");
-                    break;
-            }
         }
     }
 
@@ -152,8 +115,20 @@ public class GuessClient {
         return a;
     }
 
+    public void stop(){
+        if(socket != null){
+            socket.close();
+        }
+    }
+
     public static void main(String[] args) {
         GuessClient client = new GuessClient();
-        client.start();
+        try{
+            client.start();
+        }catch(Exception e){
+            System.out.println("Error in client.");
+        }finally {
+            client.stop();
+        }
     }
 }

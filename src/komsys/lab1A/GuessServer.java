@@ -38,16 +38,36 @@ public class GuessServer {
 
         switch(args[0]){
             case "HELLO":
-                send("OK",port,addr);
-                gameSessions.add(new GameSession(port,addr));
+                if(gs == null){
+                    gameSessions.add(new GameSession(port,addr));
+                    send("OK",port,addr);
+
+                }else{
+                    send("ERROR", port, addr);
+                }
                 break;
             case "START":
-                send(gs.start(),gs.getPort(),gs.getAddress());
+                if(gs == null){
+                    send("ERROR", port, addr);
+                }else{
+                    send(gs.start(), port, addr);
+                }
+
                 break;
             case "GUESS":
-                send(gs.guess(Integer.parseInt(args[1])),gs.getPort(),gs.getAddress());
+                if(gs == null){
+                    send("ERROR", port, addr);
+                }else{
+                    try{
+                        int number = Integer.parseInt(args[1]);
+                        send(gs.guess(number), port, addr);
+                    }catch(Exception e){
+                        send("ERROR", port, addr);
+                    }
+                }
                 break;
             default:
+                send("ERROR", port, addr);
                 break;
         }
     }
@@ -91,11 +111,9 @@ public class GuessServer {
                 String message = new String(packet.getData(),0,packet.getLength());
                 ProcessMessage(message,packet.getPort(),packet.getAddress());
             }catch(IOException e){
-
+                System.out.println("Socket error");
             }
         }
-
-
     }
 
 

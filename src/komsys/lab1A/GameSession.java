@@ -10,12 +10,18 @@ public class GameSession{
     private InetAddress address;
     private int port;
     private boolean finished = false;
+    private boolean started = false;
 
     private int theNumber;
+    private int prevGuessedNumber = 0;
 
     public GameSession(int port, InetAddress address){
         this.port = port;
         this.address = address;
+    }
+
+    public String prevGuess(){
+        return guess(prevGuessedNumber);
     }
 
     public boolean isFinished(){
@@ -41,12 +47,12 @@ public class GameSession{
     public String start(){
         Random r =  new Random();
         theNumber = r.nextInt(100);
-
+        started = true;
         return CommunicationProtocol.Ready();
     }
 
     public String guess(int number){
-
+        prevGuessedNumber = number;
         if(number == theNumber){
             finished = true;
             return CommunicationProtocol.Correct();
