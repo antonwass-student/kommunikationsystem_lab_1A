@@ -7,14 +7,25 @@ import java.net.UnknownHostException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Main {
+/**
+ * Created by Anton on 2016-09-07.
+ */
+public class GuessClient {
+    private Scanner scanner = new Scanner(System.in);
+    private DatagramSocket socket = null;
+    private InetAddress addr = null;
+    private int port = -1;
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    public GuessClient(){
 
-        InetAddress addr = null;
+    }
 
-        int port = -1;
+    public void start(){
+        chooseAddress();
+        connect();
+    }
+
+    private void chooseAddress(){
         while(addr == null){
             System.out.println("Address:");
             try {
@@ -34,12 +45,22 @@ public class Main {
                 System.out.println("That was not an integer.");
             }
         }
-
-        try {
-            DatagramSocket socket = new DatagramSocket(port, addr);
-        } catch (SocketException e) {
-            System.out.println("Could not bind to specified port/address.");
-        }
-
     }
+
+    private void connect(){
+        while(socket == null){
+            try {
+                socket = new DatagramSocket(port, addr);
+            } catch (SocketException e) {
+                System.out.println("Could not bind to specified port/address.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        GuessClient client = new GuessClient();
+        client.start();
+    }
+
+
 }
