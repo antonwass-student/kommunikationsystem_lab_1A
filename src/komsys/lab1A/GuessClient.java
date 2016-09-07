@@ -11,13 +11,18 @@ import java.util.Scanner;
 public class GuessClient {
     private Scanner scanner = new Scanner(System.in);
     private DatagramSocket socket = null;
-    private InetAddress addr = null;
+    private InetAddress address = null;
     private int port = -1;
 
     public void start(){
-        chooseAddress();
-        while(connect() == false){
-            chooseAddress();
+        address = getDestinationAddress();
+        port = getDestinationPort();
+
+        try {
+            socket = new DatagramSocket();
+        } catch (SocketException e) {
+            System.out.println("Could not create socket...");
+            return;
         }
 
         play();
@@ -65,7 +70,7 @@ public class GuessClient {
                     playing = false;
                     break;
                 case "STO":
-                    System.out.println("Request timed out...");
+                    System.out.println("Request timed out. Exiting program.");
                     playing = false;
                     break;
                 default:
@@ -78,6 +83,8 @@ public class GuessClient {
     private void send(String message){
         byte[] data = message.getBytes();
         DatagramPacket pkt = new DatagramPacket(data, 0, data.length);
+        pkt.setAddress(address);
+        pkt.setPort(port);
         try {
             socket.send(pkt);
         } catch (IOException e) {
@@ -122,36 +129,29 @@ public class GuessClient {
         return number;
     }
 
-    private void chooseAddress(){
-        while(addr == null){
+    private int getDestinationPort(){
+        int p = -1;
+
+        while(p < 1024){
+            System.out.println("Port:");
+            p = readIntSafe();
+        }
+
+        return p;
+    }
+
+    private InetAddress getDestinationAddress(){
+        InetAddress a = null;
+        while(a == null){
             System.out.println("Address:");
             try {
-                addr = InetAddress.getByName(scanner.nextLine());
+                a = InetAddress.getByName(scanner.nextLine());
             } catch (UnknownHostException e) {
                 System.out.println("Unknown host.");
             }
         }
 
-        while(port < 1024){
-            System.out.println("Port:");
-            scanner.next();
-
-            try{
-                port = scanner.nextInt();
-            }catch(InputMismatchException ime){
-                System.out.println("That was not an integer.");
-            }
-        }
-    }
-
-    private boolean connect(){
-        try {
-            socket = new DatagramSocket(port, addr);
-            return true;
-        } catch (SocketException e) {
-            System.out.println("Could not bind to specified port/address.");
-            return false;
-        }
+        return a;
     }
 
     public static void main(String[] args) {
