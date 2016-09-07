@@ -27,4 +27,13 @@ public class CommunicationProtocol {
     public static String Start(){
         return "START";
     }
+    public static String Higher(){
+        return "HI";
+    }
+    public static String Lower(){
+        return "LO";
+    }
+    public static String Correct(){
+        return "CORRECT";
+    }
 }
