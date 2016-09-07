@@ -17,6 +17,22 @@ public class GameSession{
         this.address = address;
     }
 
+    public InetAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(InetAddress address) {
+        this.address = address;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     public String start(){
         Random r =  new Random();
         int theNumber = r.nextInt(100);
