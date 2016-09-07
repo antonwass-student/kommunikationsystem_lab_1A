@@ -82,9 +82,7 @@ public class GuessClient {
 
     private void send(String message){
         byte[] data = message.getBytes();
-        DatagramPacket pkt = new DatagramPacket(data, 0, data.length);
-        pkt.setAddress(address);
-        pkt.setPort(port);
+        DatagramPacket pkt = new DatagramPacket(data, 0, data.length, address, port);
         try {
             socket.send(pkt);
         } catch (IOException e) {

@@ -1,9 +1,11 @@
 package komsys.lab1A;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -16,6 +18,8 @@ public class GuessServer {
     private int currentClientPort;
 
     private DatagramSocket socket;
+
+    private ArrayList<Object> gameSessions;
 
     public GuessServer(){
         socket = null;
@@ -30,6 +34,14 @@ public class GuessServer {
             }
         }finally{
 
+        }
+    }
+
+    public void ProcessMessage(String message, int port, InetAddress addr){
+        String[] args = message.split(" ");
+
+        switch(args[0]){
+            //handle hello, ok, guess
         }
     }
 
