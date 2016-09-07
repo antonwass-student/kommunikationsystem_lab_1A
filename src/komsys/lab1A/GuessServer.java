@@ -14,57 +14,51 @@ import java.util.Random;
 public class GuessServer {
     private static final int PORT = 1234;
     private static final int MAXBUFFER = 1024;
-    private InetAddress currentClientAddress;
-    private int currentClientPort;
 
     private DatagramSocket socket;
 
-    private ArrayList<Object> gameSessions;
+    private ArrayList<GameSession> gameSessions;
 
     public GuessServer(){
         socket = null;
-        currentClientAddress = null;
+        gameSessions = new ArrayList<>();
     }
 
-    private void GameSession() throws IOException{
-        try{
-            System.out.println("Game session started.");
-            if (recive().equals("HELLO")){
-                Game();
-            }
-        }finally{
-
-        }
+    private void Game() throws IOException{
+        recive();
     }
 
     public void ProcessMessage(String message, int port, InetAddress addr){
         String[] args = message.split(" ");
 
+        GameSession gs = getGameSession(port,addr);
+
         switch(args[0]){
-            //handle hello, ok, guess
+            case "HELLO":
+                send("OK",port,addr);
+                gameSessions.add(new GameSession(port,addr));
+                break;
+            case "START":
+                send(gs.start(),gs.getPort(),gs.getAddress());
+                break;
+            case "GUESS":
+                send(gs.guess(Integer.parseInt(args[1])),gs.getPort(),gs.getAddress());
+                break;
+            default:
+                break;
         }
     }
 
-    private void Game() throws IOException{
-        send("OK");
-        if(recive().equals("START")){
-            send("READY");
-
-            Random r =  new Random();
-            int number = r.nextInt(100);
-
-            /*while (true) {
-
-            }*/
+    private GameSession getGameSession(int port, InetAddress addr){
+        for (GameSession gs: gameSessions) {
+            if(gs.compare(port,addr)) return gs;
         }
-
-
-
+        return null;
     }
 
-    private void send(String message){
+    private void send(String message, int port, InetAddress address){
         byte[] data = message.getBytes();
-        DatagramPacket packet = new DatagramPacket(data,data.length,currentClientAddress,currentClientPort);
+        DatagramPacket packet = new DatagramPacket(data,data.length,address,port);
         try{
             socket.send(packet);
         } catch (IOException e) {
@@ -72,33 +66,28 @@ public class GuessServer {
         }
     }
 
-    private String recive() throws IOException{
-        byte[] buffer = new byte[MAXBUFFER];
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-        try{
-            System.out.println("Waiting for message...");
-            socket.receive(packet);
-            if(currentClientAddress == null){
-                currentClientAddress = packet.getAddress();
-                currentClientPort = packet.getPort();
-            }
-            if(!packet.getAddress().equals(currentClientAddress)) {
-                send("BUSY");
-                return "";
-            }
+    private void recive() throws IOException{
+        while(true){
+            byte[] buffer = new byte[MAXBUFFER];
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+            try{
+                System.out.println("Waiting for message...");
+                socket.receive(packet);
+                String message = new String(packet.getData(),0,packet.getLength());
+                ProcessMessage(message,packet.getPort(),packet.getAddress());
+            }catch(IOException e){
 
-        }catch(IOException e){
-            return "";
+            }
         }
-        System.out.println("Package recived from "+ packet.getAddress());
-        return new String(packet.getData(), 0, packet.getLength());
+
+
     }
 
 
     private void start() throws IOException{
         try {
             socket = new DatagramSocket(PORT);
-            GameSession();
+            Game();
         }finally {
             socket.close();
             System.out.println("Server closed.");
