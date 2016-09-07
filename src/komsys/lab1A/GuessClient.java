@@ -23,6 +23,11 @@ public class GuessClient {
     public void start(){
         chooseAddress();
         connect();
+        play();
+    }
+
+    private void play(){
+
     }
 
     private void chooseAddress(){
@@ -61,6 +66,4 @@ public class GuessClient {
         GuessClient client = new GuessClient();
         client.start();
     }
-
-
 }
