@@ -29,7 +29,10 @@ public class GuessServer {
     }
 
     public void ProcessMessage(String message, int port, InetAddress addr){
+
         String[] args = message.split(" ");
+
+        cleanFinishedSessions(); //Remove sessions that are finished.
 
         GameSession gs = getGameSession(port,addr);
 
@@ -47,6 +50,18 @@ public class GuessServer {
             default:
                 break;
         }
+    }
+
+    private void cleanFinishedSessions(){
+        ArrayList<GameSession> toRemove = new ArrayList<>();
+
+        for(GameSession gs : gameSessions){
+            if(gs.isFinished())
+                toRemove.add(gs);
+        }
+
+        gameSessions.removeAll(toRemove);
+
     }
 
     private GameSession getGameSession(int port, InetAddress addr){

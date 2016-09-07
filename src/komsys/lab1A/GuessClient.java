@@ -42,7 +42,7 @@ public class GuessClient {
             switch(message){
                 case "READY":
                     System.out.println("Server is ready. Guess a number!");
-                    scanner.next();
+                    //scanner.next();
                     send(CommunicationProtocol.Guess(readIntSafe()));
                     break;
                 case "OK":
@@ -52,13 +52,13 @@ public class GuessClient {
                 case "HI":
                     System.out.println("Higher");
                     System.out.println("Guess:");
-                    scanner.next();
+                    //scanner.next();
                     send(CommunicationProtocol.Guess(readIntSafe()));
                     break;
                 case "LO":
                     System.out.println("Lower");
                     System.out.println("Guess:");
-                    scanner.next();
+                    //scanner.next();
                     send(CommunicationProtocol.Guess(readIntSafe()));
                     break;
                 case "CORRECT":

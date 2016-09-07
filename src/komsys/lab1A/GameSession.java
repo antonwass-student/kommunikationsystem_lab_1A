@@ -9,12 +9,17 @@ import java.util.Random;
 public class GameSession{
     private InetAddress address;
     private int port;
+    private boolean finished = false;
 
     private int theNumber;
 
     public GameSession(int port, InetAddress address){
         this.port = port;
         this.address = address;
+    }
+
+    public boolean isFinished(){
+        return finished;
     }
 
     public InetAddress getAddress() {
@@ -43,6 +48,7 @@ public class GameSession{
     public String guess(int number){
 
         if(number == theNumber){
+            finished = true;
             return CommunicationProtocol.Correct();
         }else if(number < theNumber){
             return CommunicationProtocol.Higher();
