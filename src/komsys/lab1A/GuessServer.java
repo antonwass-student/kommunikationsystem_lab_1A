@@ -12,12 +12,14 @@ import java.util.Random;
 public class GuessServer {
     private static final int PORT = 1234;
     private static final int MAXBUFFER = 1024;
-    private InetAddress currentClient;
+    private InetAddress currentClientAddress;
+    private int currentClientPort;
 
     private DatagramSocket socket;
 
     public GuessServer(){
         socket = null;
+        currentClientAddress = null;
     }
 
     private void GameSession() throws IOException{
@@ -39,9 +41,9 @@ public class GuessServer {
             Random r =  new Random();
             int number = r.nextInt(100);
 
-            while (true) {
+            /*while (true) {
 
-            }
+            }*/
         }
 
 
@@ -50,7 +52,7 @@ public class GuessServer {
 
     private void send(String message){
         byte[] data = message.getBytes();
-        DatagramPacket packet = new DatagramPacket(data, data.length);
+        DatagramPacket packet = new DatagramPacket(data,data.length,currentClientAddress,currentClientPort);
         try{
             socket.send(packet);
         } catch (IOException e) {
@@ -64,7 +66,15 @@ public class GuessServer {
         try{
             System.out.println("Waiting for message...");
             socket.receive(packet);
-            currentClient = packet.getAddress();
+            if(currentClientAddress == null){
+                currentClientAddress = packet.getAddress();
+                currentClientPort = packet.getPort();
+            }
+            if(!packet.getAddress().equals(currentClientAddress)) {
+                send("BUSY");
+                return "";
+            }
+
         }catch(IOException e){
             return "";
         }
