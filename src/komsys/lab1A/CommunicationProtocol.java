@@ -4,15 +4,27 @@ package komsys.lab1A;
  * Created by Anton on 2016-09-07.
  */
 public class CommunicationProtocol {
-    public String Hello(){
-        return new String("HELLO");
+    public static String Hello(){
+        return "HELLO";
     }
 
-    public String Ok(){
-        return new String("OK");
+    public static String Ok(){
+        return "OK";
     }
 
-    public String Busy(){
-        return new String("BUSY");
+    public static String Busy(){
+        return "BUSY";
+    }
+
+    public static String Guess(int number){
+        return "GUESS " + number;
+    }
+
+    public static String Ready(){
+        return "READY";
+    }
+
+    public static String Start(){
+        return "START";
     }
 }
