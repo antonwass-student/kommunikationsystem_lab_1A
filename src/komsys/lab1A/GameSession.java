@@ -35,7 +35,7 @@ public class GameSession{
 
     public String start(){
         Random r =  new Random();
-        int theNumber = r.nextInt(100);
+        theNumber = r.nextInt(100);
 
         return CommunicationProtocol.Ready();
     }
