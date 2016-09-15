@@ -34,7 +34,7 @@ public class GuessServer {
 
         cleanFinishedSessions(); //Remove sessions that are finished.
 
-        GameSession gs = getGameSession(port,addr);
+        GameSession gs = getGameSession(port,addr); //Get active gamesession with client if there is one
 
         switch(args[0]){
             case "HELLO":

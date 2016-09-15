@@ -15,8 +15,8 @@ public class GuessClient {
     private int port = -1;
 
     public void start(){
-        address = getDestinationAddress();
-        port = getDestinationPort();
+        address = inputDestinationAddress();
+        port = inputDestinationPort();
 
         try {
             socket = new DatagramSocket();
@@ -31,7 +31,7 @@ public class GuessClient {
     private void play(){
         boolean playing = true;
 
-        System.out.println("Hello! Write HELLO");
+        System.out.println("Hello! Write HELLO to poke server.");
 
         while(playing){
 
@@ -90,7 +90,7 @@ public class GuessClient {
         return number;
     }
 
-    private int getDestinationPort(){
+    private int inputDestinationPort(){
         int p = -1;
 
         while(p < 1024){
@@ -101,7 +101,7 @@ public class GuessClient {
         return p;
     }
 
-    private InetAddress getDestinationAddress(){
+    private InetAddress inputDestinationAddress(){
         InetAddress a = null;
         while(a == null){
             System.out.println("Address:");
