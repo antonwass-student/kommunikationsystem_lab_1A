@@ -109,6 +109,7 @@ public class GuessServer {
                 System.out.println("Waiting for message...");
                 socket.receive(packet);
                 String message = new String(packet.getData(),0,packet.getLength());
+                System.out.println("rec: " + message);
                 ProcessMessage(message,packet.getPort(),packet.getAddress());
             }catch(IOException e){
                 System.out.println("Socket error");

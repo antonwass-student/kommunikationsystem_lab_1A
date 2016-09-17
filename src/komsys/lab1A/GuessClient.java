@@ -32,14 +32,13 @@ public class GuessClient {
         boolean playing = true;
 
         System.out.println("Hello! Write HELLO to poke server.");
+        scanner.nextLine();
 
         while(playing){
-
-            String message = receive(5000);
-            System.out.println(message);
             String msg = scanner.nextLine();
             send(msg);
-
+            String message = receive(5000);
+            System.out.println(message);
         }
     }
 
